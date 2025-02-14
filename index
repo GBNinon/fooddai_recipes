@@ -5,12 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FooddAI Recipes</title>
   <style>
-    /* 
-      Reusing the wave header, circle-video, loader, etc. 
-      Similar to your original FooddAI design. 
-    */
-
-    /* Global resets */
     *, *::before, *::after {
       box-sizing: border-box;
     }
@@ -23,14 +17,13 @@
       text-align: center;
     }
 
-    /* Waves Container (same style as Page A) */
     .header-grid {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       position: relative;
       width: 100%;
       overflow: hidden;
-      padding-bottom: 100px; /* space for wave */
+      padding-bottom: 100px;
     }
     .waves-container {
       position: absolute;
@@ -50,15 +43,14 @@
     .dark-wave {
       top: 0;
       z-index: 2;
-      fill: #9a7baa; /* Purple wave */
+      fill: #9a7baa;
     }
     .yellow-wave {
       top: 6px;
       z-index: 1;
-      fill: #FAD378; /* Orange wave */
+      fill: #FAD378;
     }
 
-    /* Video avatar (same style) */
     .video-wrapper {
       grid-column: 4 / span 2;
       margin-top: 70px;
@@ -92,7 +84,6 @@
       transform: scale(1.1);
     }
 
-    /* Optional UNMUTE button top-right */
     .unmute-button {
       position: fixed;
       top: 20px;
@@ -111,7 +102,6 @@
       background: #333;
     }
 
-    /* Main content layout */
     main {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
@@ -121,17 +111,15 @@
       grid-auto-rows: auto;
     }
 
-    /* Title or greeting under the avatar */
     .recipes-title {
       grid-column: 2 / span 8;
-      margin-top: -90px; /* overlap wave if you like */
+      margin-top: -90px;
       margin-bottom: 20px;
       font-size: 22px;
       font-weight: bold;
       font-family: 'Poppins', sans-serif;
     }
 
-    /* A large box for the AI output */
     .response-box {
       grid-column: 2 / span 8;
       position: relative;
@@ -155,7 +143,6 @@
       margin-bottom: 10px;
     }
 
-    /* Loader overlay with same style as before */
     .loader-overlay {
       position: absolute;
       top: 0;
@@ -169,7 +156,7 @@
       justify-content: center;
       border-radius: 5px;
       z-index: 10;
-      display: none; /* hidden by default */
+      display: none;
     }
     .dots-wrapper {
       display: flex;
@@ -183,22 +170,12 @@
       border-radius: 50%;
       animation: bounce 1s infinite;
     }
-    .dot:nth-child(1) {
-      animation-delay: 0s;
-    }
-    .dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
+    .dot:nth-child(1) { animation-delay: 0s; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce {
-      0%, 80%, 100% {
-        transform: translateY(0);
-      }
-      40% {
-        transform: translateY(-15px);
-      }
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-15px); }
     }
     .loader-text {
       color: #ffffff;
@@ -219,42 +196,27 @@
   </style>
 </head>
 <body>
-  <!-- Header with waves + avatar just like on Page A -->
   <header class="header-grid">
     <div class="waves-container">
-      <svg class="dark-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
-        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"></path>
-      </svg>
-      <svg class="yellow-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
-        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"></path>
-      </svg>
+      <svg class="dark-wave"></svg>
+      <svg class="yellow-wave"></svg>
     </div>
 
-    <!-- Same circle video / avatar as on Page A -->
     <div class="video-wrapper">
       <div class="circle-video">
-        <!-- Upload the same 'avatarfooddai.mp4' to your GitHub repo, or use an absolute URL -->
         <video class="avatar-video" id="videoPlayer" autoplay playsinline loop muted>
-          <source src="avatarfooddai.mp4" type="video/mp4">
+          <source src="visuals/avatar fooddai.mp4" type="video/mp4">
         </video>
       </div>
-      <!-- And the same 'Playpausebutton.png' for the overlay icon -->
-      <img 
-        class="play-pause-avatar" 
-        id="playPauseAvatar" 
-        src="Playpausebutton.png" 
-        alt="Play/Pause">
+      <img class="play-pause-avatar" id="playPauseAvatar" src="visuals/Play pause button.png" alt="Play/Pause">
     </div>
   </header>
 
-  <!-- Unmute button if desired -->
   <button class="unmute-button" id="unmuteBtn">UNMUTE</button>
 
   <main>
-    <!-- Title showing user they've arrived for final recipes -->
     <h1 class="recipes-title">Your Kid-Proof Recipes</h1>
 
-    <!-- Our big response box -->
     <div class="response-box" id="responseBox">
       <div class="loader-overlay" id="loader">
         <div class="dots-wrapper">
@@ -262,76 +224,30 @@
           <div class="dot"></div>
           <div class="dot"></div>
         </div>
-        <div class="loader-text">Your meal magic is coming! Fooddai is thinking...</div>
+        <div class="loader-text">Your meal magic is coming! FooddAI is thinking...</div>
       </div>
       <div class="response-title" id="responseTitle"></div>
       <div id="responseContent"></div>
     </div>
   </main>
 
-  <footer>
-    &copy; 2024 FooddAI. All rights reserved.
-  </footer>
+  <footer>&copy; 2024 FooddAI. All rights reserved.</footer>
 
   <script>
-    // 1) Parse the ?ingredients=... from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const ingredients = urlParams.get('ingredients') || '';
-
-    // 2) The ChatGPT API endpoint
     const apiUrl = 'https://vercel-host-coral.vercel.app/api/generate';
-
-    // 3) Set up references to DOM elements
     const responseBox = document.getElementById('responseBox');
     const loader = document.getElementById('loader');
     const responseTitle = document.getElementById('responseTitle');
     const responseContent = document.getElementById('responseContent');
 
-    // 4) On load, if no ingredients, just show a message
-    window.addEventListener('DOMContentLoaded', () => {
-      if (!ingredients) {
-        responseTitle.textContent = "No ingredients found!";
-        responseContent.textContent = "Please return to the main FooddAI page to select your ingredients.";
-      } else {
-        // We have ingredients, so let's fetch the AI recipes
-        fetchRecipes(ingredients);
-      }
+    const urlParams = new URLSearchParams(window.location.search);
+    const ingredients = urlParams.get('ingredients') || '';
 
-      // OPTIONAL: set up video unmute/pause
-      const unmuteBtn = document.getElementById('unmuteBtn');
-      const videoPlayer = document.getElementById('videoPlayer');
-      const playPauseAvatar = document.getElementById('playPauseAvatar');
-
-      if (unmuteBtn && videoPlayer) {
-        unmuteBtn.addEventListener('click', () => {
-          videoPlayer.muted = !videoPlayer.muted;
-          unmuteBtn.innerText = videoPlayer.muted ? "UNMUTE" : "MUTE";
-          videoPlayer.play().catch(() => {});
-        });
-      }
-
-      if (playPauseAvatar && videoPlayer) {
-        playPauseAvatar.addEventListener('click', () => {
-          if (videoPlayer.paused) {
-            videoPlayer.play().catch(() => {});
-          } else {
-            videoPlayer.pause();
-          }
-        });
-      }
-    });
-
-    // 5) Function to call ChatGPT
-    async function fetchRecipes(ingredientsParam) {
-      // Show loader overlay
+    async function fetchRecipes(ingredients) {
       loader.style.display = 'flex';
-      responseTitle.textContent = '';
-      responseContent.textContent = '';
 
-      // Build your prompt
-      const prompt = `Give me today's kids-proof recipes based on: ${ingredientsParam};
-      Please show me 3 recipes that are kid-proof and appealing for children, 
-      with the chosen ingredients. Add any typical seasonings.`;
+      const prompt = `Give me 3 fun, kid-friendly recipes based on: ${ingredients}. 
+      The recipes should be appealing to kids and use only the selected ingredients plus any necessary seasonings.`;
 
       try {
         const res = await fetch(apiUrl, {
@@ -339,26 +255,19 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt }),
         });
-        loader.style.display = 'none'; // Hide loader
-
-        if (!res.ok) {
-          responseTitle.textContent = "Error fetching recipes";
-          responseContent.textContent = `Server responded with ${res.status}`;
-          return;
-        }
 
         const data = await res.json();
-        const aiResponse = data.choices[0]?.message?.content.trim() || "No response generated.";
-        
+        loader.style.display = 'none';
         responseTitle.textContent = "Recipe Suggestions:";
-        // We'll convert newlines to <br> for better formatting
-        responseContent.innerHTML = aiResponse.replace(/\n/g, "<br>");
+        responseContent.innerHTML = data.choices[0]?.message?.content.replace(/\n/g, "<br>");
       } catch (err) {
         loader.style.display = 'none';
-        responseTitle.textContent = "Error fetching recipes";
+        responseTitle.textContent = "Error";
         responseContent.textContent = err.message;
       }
     }
+
+    if (ingredients) fetchRecipes(ingredients);
   </script>
 </body>
 </html>
