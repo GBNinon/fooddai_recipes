@@ -109,22 +109,23 @@
       grid-auto-rows: auto;
     }
 
-    /* Title with no bottom margin */
+    /* Title with tighter spacing */
     .recipes-title {
       grid-column: 2 / span 8;
       margin-top: -90px;
-      margin-bottom: 0; /* no extra space below the title */
+      margin-bottom: 5px; /* Reduced space below title */
       font-size: 22px;
       font-weight: bold;
       font-family: 'Poppins', sans-serif;
     }
 
-    /* Prompt text with minimal top margin */
+    /* Ingredients text directly under title */
     .prompt-text {
       grid-column: 2 / span 8;
       font-size: 16px;
       color: #666;
-      margin: 3px auto 10px auto; /* just 3px above, 10px below */
+      margin-top: 0px; /* No extra space above */
+      margin-bottom: 10px; /* Keeps a small gap before the response box */
       font-family: 'Karla', sans-serif;
     }
 
@@ -206,31 +207,11 @@
 <body>
   <header class="header-grid">
     <div class="waves-container">
-      <!-- Purple wave -->
       <svg class="dark-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
-        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"/>
+        <path d="M0,160L40,165.3C80,171,160,181,240,176C320,171,400,149,480,133.3C560,117,640,107,720,122.7C800,139,880,181,960,176C1040,171,1120,117,1200,106.7C1280,96,1360,128,1400,144L1440,160Z"></path>
       </svg>
-      <!-- Orange wave -->
-      <svg class="yellow-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
-        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"/>
-      </svg>
-    </div>
-
-    <div class="video-wrapper">
-      <div class="circle-video">
-        <video class="avatar-video" id="videoPlayer" autoplay playsinline loop muted>
-          <source src="visuals/Avatar_fooddai_recipepage.mp4" type="video/mp4">
-        </video>
-      </div>
-      <img 
-        class="play-pause-avatar" 
-        id="playPauseAvatar" 
-        src="visuals/Play pause button.png" 
-        alt="Play/Pause">
     </div>
   </header>
-
-  <button class="unmute-button" id="unmuteBtn">MUTE</button>
 
   <main>
     <h1 class="recipes-title">Your Kid-Proof Recipes</h1>
@@ -239,9 +220,7 @@
     <div class="response-box" id="responseBox">
       <div class="loader-overlay" id="loader">
         <div class="dots-wrapper">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
         </div>
         <p class="loader-text">Your meal magic is coming! FooddAI is thinking...</p>
       </div>
@@ -252,60 +231,39 @@
   <footer>&copy; 2024 FooddAI. All rights reserved.</footer>
 
   <script>
-    // Parse ?ingredients=...
+    // Get ingredients from URL
     const urlParams = new URLSearchParams(window.location.search);
     const ingredients = urlParams.get('ingredients') || '';
 
-    // ChatGPT endpoint
+    // ChatGPT API connection
     const apiUrl = 'https://vercel-host-coral.vercel.app/api/generate';
 
-    // DOM references
+    // DOM Elements
     const promptText = document.getElementById('promptText');
     const loader = document.getElementById('loader');
     const responseContent = document.getElementById('responseContent');
-    const unmuteBtn = document.getElementById('unmuteBtn');
-    const videoPlayer = document.getElementById('videoPlayer');
-    const playPauseAvatar = document.getElementById('playPauseAvatar');
 
-    // Show chosen ingredients
+    // Display selected ingredients
     if (ingredients) {
       promptText.textContent = `You picked: ${ingredients.replace(/,/g, ', ')}`;
     } else {
       promptText.textContent = "No ingredients found. Maybe come from the FooddAI page?";
     }
 
-    // On DOM load, fetch recipes if any
+    // Fetch recipes on page load
     window.addEventListener('DOMContentLoaded', () => {
       if (ingredients) {
         fetchRecipes(ingredients);
       } else {
         responseContent.innerHTML = "<strong>No ingredients selected. Please return and pick some!</strong>";
       }
-
-      // Mute toggle
-      unmuteBtn.addEventListener('click', () => {
-        videoPlayer.muted = !videoPlayer.muted;
-        unmuteBtn.innerText = videoPlayer.muted ? "UNMUTE" : "MUTE";
-        videoPlayer.play().catch(() => {});
-      });
-
-      // Play/Pause toggle
-      playPauseAvatar.addEventListener('click', () => {
-        if (videoPlayer.paused) {
-          videoPlayer.play().catch(() => {});
-        } else {
-          videoPlayer.pause();
-        }
-      });
     });
 
-    // Fetch recipes from ChatGPT
     async function fetchRecipes(ingredientsParam) {
       loader.style.display = 'flex';
       responseContent.innerHTML = "";
 
-      const prompt = `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
-      Keep them appealing to children, using only these ingredients + typical seasonings.`;
+      const prompt = `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.`;
 
       try {
         const res = await fetch(apiUrl, {
@@ -315,19 +273,9 @@
         });
         loader.style.display = 'none';
 
-        if (!res.ok) {
-          responseContent.innerHTML = `<strong>Error:</strong> Server responded with ${res.status}`;
-          return;
-        }
         const data = await res.json();
-        const aiText = data.choices[0]?.message?.content.trim()
-                       || "No recipe suggestions found.";
-
-        responseContent.innerHTML = 
-          `<strong>Recipe Suggestions:</strong><br>` 
-          + aiText.replace(/\n/g, "<br>");
+        responseContent.innerHTML = `<strong>Recipe Suggestions:</strong><br>` + data.choices[0].message.content.replace(/\n/g, "<br>");
       } catch (err) {
-        loader.style.display = 'none';
         responseContent.innerHTML = `<strong>Error:</strong> ${err.message}`;
       }
     }
