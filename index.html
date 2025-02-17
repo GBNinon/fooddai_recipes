@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FooddAI Recipes</title>
   <style>
-    /* Global resets & layout */
     *, *::before, *::after {
       box-sizing: border-box;
     }
     body {
-      margin: 0;
+      margin: 0; 
       padding: 0;
       font-family: 'Karla', sans-serif;
       background: #fff;
@@ -18,9 +17,12 @@
       text-align: center;
     }
 
-    /* Wave + Avatar header */
+    /* HEADER GRID & WAVES */
     .header-grid {
       display: grid;
+      /* 10 columns as before, 
+         but we’ll center the avatar 
+         by placing it in columns 4–7 or 5–6  */
       grid-template-columns: repeat(10, 1fr);
       position: relative;
       width: 100%;
@@ -41,27 +43,32 @@
       display: block;
     }
     .dark-wave {
-      top: 0;
+      top: 0;     /* Both waves start at top: 0 */
       z-index: 2;
       fill: #9a7baa;
     }
     .yellow-wave {
-      top: 6px;
+      top: 0;     /* Overlap exactly on top instead of below */
       z-index: 1;
       fill: #FAD378;
     }
 
+    /* VIDEO AVATAR */
     .video-wrapper {
-      grid-column: 4 / span 2;
-      margin-top: 70px;
+      /* Instead of grid-column: 4 / span 2, 
+         we place it in columns 4–7 so it's more centered.
+         Then justify-self: center ensures it’s pinned in that region. */
+      grid-column: 4 / span 4; 
       justify-self: center;
+      margin-top: 70px;
       position: relative;
       display: inline-block;
       z-index: 3; 
     }
     .circle-video {
-      width: 300px;
-      height: 300px;
+      /* 20% smaller: from 300px down to ~240px */
+      width: 240px;
+      height: 240px;
       border-radius: 50%;
       overflow: hidden;
       position: relative;
@@ -84,7 +91,7 @@
       transform: scale(1.1);
     }
 
-    /* Unmute button */
+    /* UNMUTE BUTTON */
     .unmute-button {
       position: fixed;
       top: 20px;
@@ -103,7 +110,7 @@
       background: #333;
     }
 
-    /* Main content layout */
+    /* MAIN CONTENT */
     main {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
@@ -112,17 +119,16 @@
       padding: 20px;
       grid-auto-rows: auto;
     }
-
     .recipes-title {
       grid-column: 2 / span 8;
-      margin-top: -90px; /* Overlap wave if you like */
+      margin-top: -90px;
       margin-bottom: 20px;
       font-size: 22px;
       font-weight: bold;
       font-family: 'Poppins', sans-serif;
     }
 
-    /* A small field to show the user their chosen ingredients (optional) */
+    /* PROMPT TEXT */
     .prompt-text {
       grid-column: 2 / span 8;
       font-size: 16px;
@@ -131,7 +137,7 @@
       font-family: 'Karla', sans-serif;
     }
 
-    /* Response box for the AI’s recipes */
+    /* RESPONSE BOX */
     .response-box {
       grid-column: 2 / span 8;
       position: relative;
@@ -150,8 +156,6 @@
       max-height: 600px;
       overflow-y: auto;
     }
-
-    /* Loader overlay */
     .loader-overlay {
       position: absolute;
       top: 0;
@@ -199,7 +203,6 @@
   </style>
 </head>
 <body>
-  <!-- Header with waves + avatar just like on Page A -->
   <header class="header-grid">
     <div class="waves-container">
       <!-- Purple wave -->
@@ -212,15 +215,12 @@
       </svg>
     </div>
 
-    <!-- Video avatar -->
     <div class="video-wrapper">
       <div class="circle-video">
-        <!-- Make sure 'Avatar_fooddai_recipepage.mp4' is in the 'visuals' folder of your repo -->
         <video class="avatar-video" id="videoPlayer" autoplay playsinline loop muted>
           <source src="visuals/Avatar_fooddai_recipepage.mp4" type="video/mp4">
         </video>
       </div>
-      <!-- Overlapping play/pause icon -->
       <img 
         class="play-pause-avatar" 
         id="playPauseAvatar" 
@@ -229,16 +229,14 @@
     </div>
   </header>
 
-  <!-- Unmute button if desired -->
-  <button class="unmute-button" id="unmuteBtn">UNMUTE</button>
+  <button class="unmute-button" id="unmuteBtn">MUTE</button>
 
   <main>
     <h1 class="recipes-title">Your Kid-Proof Recipes</h1>
 
-    <!-- (Optional) show user the chosen ingredients as a prompt text -->
+    <!-- Show user’s chosen ingredients if you like -->
     <div class="prompt-text" id="promptText"></div>
 
-    <!-- The big response box for the AI’s recipes -->
     <div class="response-box" id="responseBox">
       <div class="loader-overlay" id="loader">
         <div class="dots-wrapper">
@@ -252,72 +250,63 @@
     </div>
   </main>
 
-  <footer>
-    &copy; 2024 FooddAI. All rights reserved.
-  </footer>
+  <footer>&copy; 2024 FooddAI. All rights reserved.</footer>
 
   <script>
-    // Grab the ingredients from ?ingredients=...
+    // Parse ?ingredients=... from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const ingredients = urlParams.get('ingredients') || '';
 
-    // If you have your own ChatGPT API endpoint, set it here
+    // This is your ChatGPT endpoint
     const apiUrl = 'https://vercel-host-coral.vercel.app/api/generate';
 
     // DOM references
     const promptText = document.getElementById('promptText');
     const loader = document.getElementById('loader');
     const responseContent = document.getElementById('responseContent');
-    const responseBox = document.getElementById('responseBox');
+    const unmuteBtn = document.getElementById('unmuteBtn');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const playPauseAvatar = document.getElementById('playPauseAvatar');
 
-    // Show user’s chosen ingredients
+    // If user selected ingredients, show them
     if (ingredients) {
       promptText.textContent = `You picked: ${ingredients.replace(/,/g, ', ')}`;
     } else {
-      promptText.textContent = "No ingredients found. Did you come directly?";
+      promptText.textContent = "No ingredients found. Maybe come from the FooddAI page?";
     }
 
-    // On DOM load, fetch the recipes automatically if ingredients exist
+    // On DOM load, fetch recipes automatically if we have ingredients
     window.addEventListener('DOMContentLoaded', () => {
       if (ingredients) {
         fetchRecipes(ingredients);
       } else {
-        responseContent.innerHTML = 
-          "<strong>No ingredients selected. Please return to the FooddAI page.</strong>";
+        responseContent.innerHTML = "<strong>No ingredients selected. Please return and pick some!</strong>";
       }
 
-      // Video controls
-      const unmuteBtn = document.getElementById('unmuteBtn');
-      const videoPlayer = document.getElementById('videoPlayer');
-      const playPauseAvatar = document.getElementById('playPauseAvatar');
+      // UNMUTE / MUTE toggle
+      unmuteBtn.addEventListener('click', () => {
+        videoPlayer.muted = !videoPlayer.muted;
+        unmuteBtn.innerText = videoPlayer.muted ? "UNMUTE" : "MUTE";
+        videoPlayer.play().catch(() => {});
+      });
 
-      if (unmuteBtn && videoPlayer) {
-        unmuteBtn.addEventListener('click', () => {
-          videoPlayer.muted = !videoPlayer.muted;
-          unmuteBtn.innerText = videoPlayer.muted ? "UNMUTE" : "MUTE";
+      // PLAY/PAUSE avatar
+      playPauseAvatar.addEventListener('click', () => {
+        if (videoPlayer.paused) {
           videoPlayer.play().catch(() => {});
-        });
-      }
-      if (playPauseAvatar && videoPlayer) {
-        playPauseAvatar.addEventListener('click', () => {
-          if (videoPlayer.paused) {
-            videoPlayer.play().catch(() => {});
-          } else {
-            videoPlayer.pause();
-          }
-        });
-      }
+        } else {
+          videoPlayer.pause();
+        }
+      });
     });
 
-    // Fetch the recipes from ChatGPT API
     async function fetchRecipes(ingredientsParam) {
-      // show loader overlay
+      // Show loader overlay
       loader.style.display = 'flex';
-      responseContent.innerHTML = "";
 
-      // Build your prompt
+      // Build ChatGPT prompt
       const prompt = `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
-      The recipes should be appealing for children, and only use these ingredients + typical seasonings.`;
+      Keep them appealing for children, using only these ingredients + typical seasonings.`;
 
       try {
         const res = await fetch(apiUrl, {
@@ -325,26 +314,21 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt }),
         });
-
-        // Hide loader
         loader.style.display = 'none';
 
         if (!res.ok) {
-          responseContent.innerHTML = 
-            `<strong>Error:</strong> The server returned status ${res.status}.`;
+          responseContent.innerHTML = `<strong>Error:</strong> Server returned ${res.status}`;
           return;
         }
-
         const data = await res.json();
-        const aiText = data.choices[0]?.message?.content.trim() || 
-                       "No recipe suggestions were generated.";
-
-        // Show the AI response
-        responseContent.innerHTML = `<strong>Recipe Suggestions:</strong><br>` 
-          + aiText.replace(/\n/g, "<br>");
-      } catch (err) {
+        const aiResponse = data.choices[0]?.message?.content.trim() 
+                           || "No recipe suggestions found.";
+        responseContent.innerHTML = 
+          `<strong>Recipe Suggestions:</strong><br>` 
+          + aiResponse.replace(/\n/g, "<br>");
+      } catch (error) {
         loader.style.display = 'none';
-        responseContent.innerHTML = `<strong>Error:</strong> ${err.message}`;
+        responseContent.innerHTML = `<strong>Error:</strong> ${error.message}`;
       }
     }
   </script>
