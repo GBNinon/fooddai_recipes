@@ -17,7 +17,6 @@
       text-align: center;
     }
 
-    /* HEADER GRID & WAVES */
     .header-grid {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
@@ -50,9 +49,7 @@
       fill: #FAD378;
     }
 
-    /* VIDEO AVATAR */
     .video-wrapper {
-      /* Moved higher: margin-top from 70px → 40px */
       margin-top: 40px;
       grid-column: 4 / span 4; 
       justify-self: center;
@@ -61,7 +58,7 @@
       z-index: 3; 
     }
     .circle-video {
-      width: 240px; 
+      width: 240px;
       height: 240px;
       border-radius: 50%;
       overflow: hidden;
@@ -103,7 +100,6 @@
       background: #333;
     }
 
-    /* MAIN CONTENT */
     main {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
@@ -113,34 +109,31 @@
       grid-auto-rows: auto;
     }
 
+    /* Title with no bottom margin */
     .recipes-title {
       grid-column: 2 / span 8;
-      /* Slightly reduced top margin for a tighter look */
-      margin-top: -90px; 
-      margin-bottom: 5px; 
+      margin-top: -90px;
+      margin-bottom: 0; /* no extra space below the title */
       font-size: 22px;
       font-weight: bold;
       font-family: 'Poppins', sans-serif;
     }
 
-    /* PROMPT TEXT: minimal spacing, directly under title */
+    /* Prompt text with minimal top margin */
     .prompt-text {
       grid-column: 2 / span 8;
       font-size: 16px;
       color: #666;
-      margin: 0 auto 10px auto; /* small margin-bottom for spacing before box */
+      margin: 3px auto 10px auto; /* just 3px above, 10px below */
       font-family: 'Karla', sans-serif;
     }
 
-    /* RESPONSE BOX */
     .response-box {
       grid-column: 2 / span 8;
       position: relative;
       width: 100%;
       max-width: 700px;
-      margin: 0 auto; 
-      /* place it closer by decreasing top margin */
-      margin-top: 10px; 
+      margin: 10px auto 0 auto; 
       padding: 10px;
       border: 2px solid #000;
       border-radius: 5px;
@@ -168,7 +161,6 @@
       border-radius: 5px;
       z-index: 10;
       display: none;
-      /* add a bit of padding so text doesn't hug edges */
       padding: 20px;
     }
     .dots-wrapper {
@@ -191,8 +183,6 @@
       0%, 80%, 100% { transform: translateY(0); }
       40% { transform: translateY(-15px); }
     }
-
-    /* Center + bold loader text in white */
     .loader-text {
       color: #fff;
       font-size: 18px;
@@ -218,11 +208,11 @@
     <div class="waves-container">
       <!-- Purple wave -->
       <svg class="dark-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
-        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
+        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"/>
       </svg>
       <!-- Orange wave -->
       <svg class="yellow-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
-        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
+        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"/>
       </svg>
     </div>
 
@@ -244,11 +234,8 @@
 
   <main>
     <h1 class="recipes-title">Your Kid-Proof Recipes</h1>
-
-    <!-- Chosen ingredients right below title, minimal spacing -->
     <div class="prompt-text" id="promptText"></div>
 
-    <!-- The response box -->
     <div class="response-box" id="responseBox">
       <div class="loader-overlay" id="loader">
         <div class="dots-wrapper">
@@ -265,14 +252,14 @@
   <footer>&copy; 2024 FooddAI. All rights reserved.</footer>
 
   <script>
-    // 1) Grab ?ingredients=...
+    // Parse ?ingredients=...
     const urlParams = new URLSearchParams(window.location.search);
     const ingredients = urlParams.get('ingredients') || '';
 
-    // 2) Your ChatGPT API
+    // ChatGPT endpoint
     const apiUrl = 'https://vercel-host-coral.vercel.app/api/generate';
 
-    // DOM
+    // DOM references
     const promptText = document.getElementById('promptText');
     const loader = document.getElementById('loader');
     const responseContent = document.getElementById('responseContent');
@@ -280,30 +267,29 @@
     const videoPlayer = document.getElementById('videoPlayer');
     const playPauseAvatar = document.getElementById('playPauseAvatar');
 
-    // Show the user’s chosen ingredients
+    // Show chosen ingredients
     if (ingredients) {
       promptText.textContent = `You picked: ${ingredients.replace(/,/g, ', ')}`;
     } else {
       promptText.textContent = "No ingredients found. Maybe come from the FooddAI page?";
     }
 
-    // On load, fetch recipes if we have any
+    // On DOM load, fetch recipes if any
     window.addEventListener('DOMContentLoaded', () => {
       if (ingredients) {
         fetchRecipes(ingredients);
       } else {
-        responseContent.innerHTML = 
-          "<strong>No ingredients selected. Please return and pick some!</strong>";
+        responseContent.innerHTML = "<strong>No ingredients selected. Please return and pick some!</strong>";
       }
 
-      // Unmute logic
+      // Mute toggle
       unmuteBtn.addEventListener('click', () => {
         videoPlayer.muted = !videoPlayer.muted;
         unmuteBtn.innerText = videoPlayer.muted ? "UNMUTE" : "MUTE";
         videoPlayer.play().catch(() => {});
       });
 
-      // Play/Pause logic
+      // Play/Pause toggle
       playPauseAvatar.addEventListener('click', () => {
         if (videoPlayer.paused) {
           videoPlayer.play().catch(() => {});
@@ -313,14 +299,13 @@
       });
     });
 
-    // 3) Fetch from ChatGPT
+    // Fetch recipes from ChatGPT
     async function fetchRecipes(ingredientsParam) {
-      loader.style.display = 'flex'; 
+      loader.style.display = 'flex';
       responseContent.innerHTML = "";
 
-      const prompt = 
-        `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
-         Keep them appealing for children, using only these ingredients + typical seasonings.`;
+      const prompt = `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
+      Keep them appealing to children, using only these ingredients + typical seasonings.`;
 
       try {
         const res = await fetch(apiUrl, {
@@ -331,8 +316,7 @@
         loader.style.display = 'none';
 
         if (!res.ok) {
-          responseContent.innerHTML = 
-            `<strong>Error:</strong> Server responded with ${res.status}`;
+          responseContent.innerHTML = `<strong>Error:</strong> Server responded with ${res.status}`;
           return;
         }
         const data = await res.json();
@@ -340,7 +324,7 @@
                        || "No recipe suggestions found.";
 
         responseContent.innerHTML = 
-          `<strong>Recipe Suggestions:</strong><br>`
+          `<strong>Recipe Suggestions:</strong><br>` 
           + aiText.replace(/\n/g, "<br>");
       } catch (err) {
         loader.style.display = 'none';
