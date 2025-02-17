@@ -20,44 +20,45 @@
     /* HEADER GRID & WAVES */
     .header-grid {
       display: grid;
-      /* 10 columns as before, 
-         but we’ll center the avatar 
-         by placing it in columns 4–7 or 5–6  */
+      /* 
+        Using columns 1–10, 
+        but we’ll center the avatar in columns 4–span-4 
+      */
       grid-template-columns: repeat(10, 1fr);
       position: relative;
       width: 100%;
       overflow: hidden;
-      padding-bottom: 100px;
+      padding-bottom: 100px; 
     }
     .waves-container {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
+      height: auto;
       z-index: 1;
     }
     .waves-container svg {
       position: absolute;
       left: 0;
       width: 100%;
+      height: auto;
       display: block;
     }
+    /* EXACT WAVE STYLES from your original snippet */
     .dark-wave {
-      top: 0;     /* Both waves start at top: 0 */
+      top: 0;
       z-index: 2;
       fill: #9a7baa;
     }
     .yellow-wave {
-      top: 0;     /* Overlap exactly on top instead of below */
+      top: 6px;
       z-index: 1;
       fill: #FAD378;
     }
 
     /* VIDEO AVATAR */
     .video-wrapper {
-      /* Instead of grid-column: 4 / span 2, 
-         we place it in columns 4–7 so it's more centered.
-         Then justify-self: center ensures it’s pinned in that region. */
       grid-column: 4 / span 4; 
       justify-self: center;
       margin-top: 70px;
@@ -65,8 +66,8 @@
       display: inline-block;
       z-index: 3; 
     }
+    /* 20% smaller than 300px => ~240px */
     .circle-video {
-      /* 20% smaller: from 300px down to ~240px */
       width: 240px;
       height: 240px;
       border-radius: 50%;
@@ -78,6 +79,8 @@
       height: 100%;
       object-fit: cover;
     }
+
+    /* PLAY/PAUSE BUTTON */
     .play-pause-avatar {
       position: absolute;
       z-index: 5; 
@@ -121,7 +124,7 @@
     }
     .recipes-title {
       grid-column: 2 / span 8;
-      margin-top: -90px;
+      margin-top: -90px; /* to overlap wave if you wish */
       margin-bottom: 20px;
       font-size: 22px;
       font-weight: bold;
@@ -169,7 +172,7 @@
       justify-content: center;
       border-radius: 5px;
       z-index: 10;
-      display: none; /* hidden by default */
+      display: none;
     }
     .dots-wrapper {
       display: flex;
@@ -205,16 +208,17 @@
 <body>
   <header class="header-grid">
     <div class="waves-container">
-      <!-- Purple wave -->
-      <svg class="dark-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#9a7baa" d="M0,160L40,165.3C80,171,160,181,240,176C320,171,400,149,480,133.3C560,117,640,107,720,122.7C800,139,880,181,960,176C1040,171,1120,117,1200,106.7C1280,96,1360,128,1400,144L1440,160L1440,0L1400,0Z"></path>
+      <!-- Purple wave (same path as your original "dark-wave") -->
+      <svg class="dark-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
+        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
       </svg>
-      <!-- Orange wave -->
-      <svg class="yellow-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#FAD378" d="M0,320L40,314.7C80,309,160,299,240,293.3C320,288,400,288,480,288C560,288,640,288,720,277.3C800,267,880,245,960,218.7C1040,192,1120,160,1200,149.3C1280,139,1360,149,1400,154.7L1440,160Z"></path>
+      <!-- Orange wave (same path as your original "yellow-wave") -->
+      <svg class="yellow-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
+        <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
       </svg>
     </div>
 
+    <!-- Video & Overlapping Play/Pause -->
     <div class="video-wrapper">
       <div class="circle-video">
         <video class="avatar-video" id="videoPlayer" autoplay playsinline loop muted>
@@ -234,10 +238,12 @@
   <main>
     <h1 class="recipes-title">Your Kid-Proof Recipes</h1>
 
-    <!-- Show user’s chosen ingredients if you like -->
+    <!-- Show user's chosen ingredients -->
     <div class="prompt-text" id="promptText"></div>
 
+    <!-- Large box for AI output -->
     <div class="response-box" id="responseBox">
+      <!-- Loader overlay -->
       <div class="loader-overlay" id="loader">
         <div class="dots-wrapper">
           <div class="dot"></div>
@@ -253,11 +259,11 @@
   <footer>&copy; 2024 FooddAI. All rights reserved.</footer>
 
   <script>
-    // Parse ?ingredients=... from the URL
+    // 1) Parse ?ingredients=... from URL
     const urlParams = new URLSearchParams(window.location.search);
     const ingredients = urlParams.get('ingredients') || '';
 
-    // This is your ChatGPT endpoint
+    // 2) Our ChatGPT API Endpoint
     const apiUrl = 'https://vercel-host-coral.vercel.app/api/generate';
 
     // DOM references
@@ -268,14 +274,14 @@
     const videoPlayer = document.getElementById('videoPlayer');
     const playPauseAvatar = document.getElementById('playPauseAvatar');
 
-    // If user selected ingredients, show them
+    // Show user’s chosen ingredients
     if (ingredients) {
       promptText.textContent = `You picked: ${ingredients.replace(/,/g, ', ')}`;
     } else {
       promptText.textContent = "No ingredients found. Maybe come from the FooddAI page?";
     }
 
-    // On DOM load, fetch recipes automatically if we have ingredients
+    // 3) On load, if we have ingredients, fetch recipes automatically
     window.addEventListener('DOMContentLoaded', () => {
       if (ingredients) {
         fetchRecipes(ingredients);
@@ -283,14 +289,14 @@
         responseContent.innerHTML = "<strong>No ingredients selected. Please return and pick some!</strong>";
       }
 
-      // UNMUTE / MUTE toggle
+      // 4) Unmute toggle
       unmuteBtn.addEventListener('click', () => {
         videoPlayer.muted = !videoPlayer.muted;
         unmuteBtn.innerText = videoPlayer.muted ? "UNMUTE" : "MUTE";
         videoPlayer.play().catch(() => {});
       });
 
-      // PLAY/PAUSE avatar
+      // 5) Play/Pause toggle
       playPauseAvatar.addEventListener('click', () => {
         if (videoPlayer.paused) {
           videoPlayer.play().catch(() => {});
@@ -300,13 +306,13 @@
       });
     });
 
+    // 6) Function to fetch recipes from ChatGPT
     async function fetchRecipes(ingredientsParam) {
-      // Show loader overlay
-      loader.style.display = 'flex';
+      loader.style.display = 'flex'; // show the loader
+      responseContent.innerHTML = "";
 
-      // Build ChatGPT prompt
       const prompt = `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
-      Keep them appealing for children, using only these ingredients + typical seasonings.`;
+      Keep them appealing to children, using only these ingredients + typical seasonings.`;
 
       try {
         const res = await fetch(apiUrl, {
@@ -317,15 +323,17 @@
         loader.style.display = 'none';
 
         if (!res.ok) {
-          responseContent.innerHTML = `<strong>Error:</strong> Server returned ${res.status}`;
+          responseContent.innerHTML = `<strong>Error:</strong> Server responded with ${res.status}`;
           return;
         }
         const data = await res.json();
-        const aiResponse = data.choices[0]?.message?.content.trim() 
-                           || "No recipe suggestions found.";
+        const aiText = data.choices[0]?.message?.content.trim() 
+                       || "No recipe suggestions found.";
+        
+        // Display the AI response
         responseContent.innerHTML = 
           `<strong>Recipe Suggestions:</strong><br>` 
-          + aiResponse.replace(/\n/g, "<br>");
+          + aiText.replace(/\n/g, "<br>");
       } catch (error) {
         loader.style.display = 'none';
         responseContent.innerHTML = `<strong>Error:</strong> ${error.message}`;
