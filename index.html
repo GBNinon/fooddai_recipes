@@ -20,10 +20,6 @@
     /* HEADER GRID & WAVES */
     .header-grid {
       display: grid;
-      /* 
-        Using columns 1–10, 
-        but we’ll center the avatar in columns 4–span-4 
-      */
       grid-template-columns: repeat(10, 1fr);
       position: relative;
       width: 100%;
@@ -35,17 +31,14 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: auto;
       z-index: 1;
     }
     .waves-container svg {
       position: absolute;
       left: 0;
       width: 100%;
-      height: auto;
       display: block;
     }
-    /* EXACT WAVE STYLES from your original snippet */
     .dark-wave {
       top: 0;
       z-index: 2;
@@ -59,16 +52,16 @@
 
     /* VIDEO AVATAR */
     .video-wrapper {
+      /* Moved higher: margin-top from 70px → 40px */
+      margin-top: 40px;
       grid-column: 4 / span 4; 
       justify-self: center;
-      margin-top: 70px;
       position: relative;
       display: inline-block;
       z-index: 3; 
     }
-    /* 20% smaller than 300px => ~240px */
     .circle-video {
-      width: 240px;
+      width: 240px; 
       height: 240px;
       border-radius: 50%;
       overflow: hidden;
@@ -79,8 +72,6 @@
       height: 100%;
       object-fit: cover;
     }
-
-    /* PLAY/PAUSE BUTTON */
     .play-pause-avatar {
       position: absolute;
       z-index: 5; 
@@ -94,7 +85,6 @@
       transform: scale(1.1);
     }
 
-    /* UNMUTE BUTTON */
     .unmute-button {
       position: fixed;
       top: 20px;
@@ -122,21 +112,23 @@
       padding: 20px;
       grid-auto-rows: auto;
     }
+
     .recipes-title {
       grid-column: 2 / span 8;
-      margin-top: -90px; /* to overlap wave if you wish */
-      margin-bottom: 20px;
+      /* Slightly reduced top margin for a tighter look */
+      margin-top: -90px; 
+      margin-bottom: 5px; 
       font-size: 22px;
       font-weight: bold;
       font-family: 'Poppins', sans-serif;
     }
 
-    /* PROMPT TEXT */
+    /* PROMPT TEXT: minimal spacing, directly under title */
     .prompt-text {
       grid-column: 2 / span 8;
       font-size: 16px;
       color: #666;
-      margin-bottom: 15px;
+      margin: 0 auto 10px auto; /* small margin-bottom for spacing before box */
       font-family: 'Karla', sans-serif;
     }
 
@@ -146,7 +138,9 @@
       position: relative;
       width: 100%;
       max-width: 700px;
-      margin: 0 auto;
+      margin: 0 auto; 
+      /* place it closer by decreasing top margin */
+      margin-top: 10px; 
       padding: 10px;
       border: 2px solid #000;
       border-radius: 5px;
@@ -159,6 +153,7 @@
       max-height: 600px;
       overflow-y: auto;
     }
+
     .loader-overlay {
       position: absolute;
       top: 0;
@@ -173,11 +168,14 @@
       border-radius: 5px;
       z-index: 10;
       display: none;
+      /* add a bit of padding so text doesn't hug edges */
+      padding: 20px;
     }
     .dots-wrapper {
       display: flex;
       gap: 8px;
       margin-bottom: 10px;
+      justify-content: center;
     }
     .dot {
       width: 12px;
@@ -194,6 +192,16 @@
       40% { transform: translateY(-15px); }
     }
 
+    /* Center + bold loader text in white */
+    .loader-text {
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      font-family: 'Karla', sans-serif;
+      margin: 0; 
+    }
+
     footer {
       text-align: center;
       padding: 10px;
@@ -208,17 +216,16 @@
 <body>
   <header class="header-grid">
     <div class="waves-container">
-      <!-- Purple wave (same path as your original "dark-wave") -->
+      <!-- Purple wave -->
       <svg class="dark-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
         <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
       </svg>
-      <!-- Orange wave (same path as your original "yellow-wave") -->
+      <!-- Orange wave -->
       <svg class="yellow-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440,320">
         <path d="M0,288L40,288C80,288,160,288,240,256C320,224,400,160,480,154.7C560,149,640,203,720,186.7C800,171,880,85,960,48C1040,11,1120,21,1200,48C1280,75,1360,117,1400,138.7L1440,160L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z" />
       </svg>
     </div>
 
-    <!-- Video & Overlapping Play/Pause -->
     <div class="video-wrapper">
       <div class="circle-video">
         <video class="avatar-video" id="videoPlayer" autoplay playsinline loop muted>
@@ -238,19 +245,18 @@
   <main>
     <h1 class="recipes-title">Your Kid-Proof Recipes</h1>
 
-    <!-- Show user's chosen ingredients -->
+    <!-- Chosen ingredients right below title, minimal spacing -->
     <div class="prompt-text" id="promptText"></div>
 
-    <!-- Large box for AI output -->
+    <!-- The response box -->
     <div class="response-box" id="responseBox">
-      <!-- Loader overlay -->
       <div class="loader-overlay" id="loader">
         <div class="dots-wrapper">
           <div class="dot"></div>
           <div class="dot"></div>
           <div class="dot"></div>
         </div>
-        <div class="loader-text">Your meal magic is coming! FooddAI is thinking...</div>
+        <p class="loader-text">Your meal magic is coming! FooddAI is thinking...</p>
       </div>
       <div id="responseContent"></div>
     </div>
@@ -259,14 +265,14 @@
   <footer>&copy; 2024 FooddAI. All rights reserved.</footer>
 
   <script>
-    // 1) Parse ?ingredients=... from URL
+    // 1) Grab ?ingredients=...
     const urlParams = new URLSearchParams(window.location.search);
     const ingredients = urlParams.get('ingredients') || '';
 
-    // 2) Our ChatGPT API Endpoint
+    // 2) Your ChatGPT API
     const apiUrl = 'https://vercel-host-coral.vercel.app/api/generate';
 
-    // DOM references
+    // DOM
     const promptText = document.getElementById('promptText');
     const loader = document.getElementById('loader');
     const responseContent = document.getElementById('responseContent');
@@ -274,29 +280,30 @@
     const videoPlayer = document.getElementById('videoPlayer');
     const playPauseAvatar = document.getElementById('playPauseAvatar');
 
-    // Show user’s chosen ingredients
+    // Show the user’s chosen ingredients
     if (ingredients) {
       promptText.textContent = `You picked: ${ingredients.replace(/,/g, ', ')}`;
     } else {
       promptText.textContent = "No ingredients found. Maybe come from the FooddAI page?";
     }
 
-    // 3) On load, if we have ingredients, fetch recipes automatically
+    // On load, fetch recipes if we have any
     window.addEventListener('DOMContentLoaded', () => {
       if (ingredients) {
         fetchRecipes(ingredients);
       } else {
-        responseContent.innerHTML = "<strong>No ingredients selected. Please return and pick some!</strong>";
+        responseContent.innerHTML = 
+          "<strong>No ingredients selected. Please return and pick some!</strong>";
       }
 
-      // 4) Unmute toggle
+      // Unmute logic
       unmuteBtn.addEventListener('click', () => {
         videoPlayer.muted = !videoPlayer.muted;
         unmuteBtn.innerText = videoPlayer.muted ? "UNMUTE" : "MUTE";
         videoPlayer.play().catch(() => {});
       });
 
-      // 5) Play/Pause toggle
+      // Play/Pause logic
       playPauseAvatar.addEventListener('click', () => {
         if (videoPlayer.paused) {
           videoPlayer.play().catch(() => {});
@@ -306,13 +313,14 @@
       });
     });
 
-    // 6) Function to fetch recipes from ChatGPT
+    // 3) Fetch from ChatGPT
     async function fetchRecipes(ingredientsParam) {
-      loader.style.display = 'flex'; // show the loader
+      loader.style.display = 'flex'; 
       responseContent.innerHTML = "";
 
-      const prompt = `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
-      Keep them appealing to children, using only these ingredients + typical seasonings.`;
+      const prompt = 
+        `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
+         Keep them appealing for children, using only these ingredients + typical seasonings.`;
 
       try {
         const res = await fetch(apiUrl, {
@@ -323,20 +331,20 @@
         loader.style.display = 'none';
 
         if (!res.ok) {
-          responseContent.innerHTML = `<strong>Error:</strong> Server responded with ${res.status}`;
+          responseContent.innerHTML = 
+            `<strong>Error:</strong> Server responded with ${res.status}`;
           return;
         }
         const data = await res.json();
-        const aiText = data.choices[0]?.message?.content.trim() 
+        const aiText = data.choices[0]?.message?.content.trim()
                        || "No recipe suggestions found.";
-        
-        // Display the AI response
+
         responseContent.innerHTML = 
-          `<strong>Recipe Suggestions:</strong><br>` 
+          `<strong>Recipe Suggestions:</strong><br>`
           + aiText.replace(/\n/g, "<br>");
-      } catch (error) {
+      } catch (err) {
         loader.style.display = 'none';
-        responseContent.innerHTML = `<strong>Error:</strong> ${error.message}`;
+        responseContent.innerHTML = `<strong>Error:</strong> ${err.message}`;
       }
     }
   </script>
