@@ -124,8 +124,7 @@
       grid-column: 2 / span 8;
       font-size: 16px;
       color: #666;
-      margin-top: 0px; /* Was 3px, now 0 */
-      margin-bottom: 10px; /* Keep a little space above the box */
+      margin: 3px auto 10px auto; /* just 3px above, 10px below */
       font-family: 'Karla', sans-serif;
     }
 
@@ -270,7 +269,7 @@
 
     // Show chosen ingredients
     if (ingredients) {
-      promptText.textContent = You picked: ${ingredients.replace(/,/g, ', ')};
+      promptText.textContent = `You picked: ${ingredients.replace(/,/g, ', ')}`;
     } else {
       promptText.textContent = "No ingredients found. Maybe come from the FooddAI page?";
     }
@@ -305,8 +304,8 @@
       loader.style.display = 'flex';
       responseContent.innerHTML = "";
 
-      const prompt = Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
-      Keep them appealing to children, using only these ingredients + typical seasonings.;
+      const prompt = `Give me 3 fun, kid-friendly recipes using these ingredients: ${ingredientsParam}.
+      Keep them appealing to children, using only these ingredients + typical seasonings.`;
 
       try {
         const res = await fetch(apiUrl, {
@@ -317,7 +316,7 @@
         loader.style.display = 'none';
 
         if (!res.ok) {
-          responseContent.innerHTML = <strong>Error:</strong> Server responded with ${res.status};
+          responseContent.innerHTML = `<strong>Error:</strong> Server responded with ${res.status}`;
           return;
         }
         const data = await res.json();
@@ -325,11 +324,11 @@
                        || "No recipe suggestions found.";
 
         responseContent.innerHTML = 
-          <strong>Recipe Suggestions:</strong><br> 
+          `<strong>Recipe Suggestions:</strong><br>` 
           + aiText.replace(/\n/g, "<br>");
       } catch (err) {
         loader.style.display = 'none';
-        responseContent.innerHTML = <strong>Error:</strong> ${err.message};
+        responseContent.innerHTML = `<strong>Error:</strong> ${err.message}`;
       }
     }
   </script>
